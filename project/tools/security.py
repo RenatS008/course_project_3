@@ -2,8 +2,9 @@ import base64
 import calendar
 import datetime
 import hashlib
-
 import jwt
+
+
 from flask import current_app, request
 
 
@@ -49,7 +50,7 @@ def generate_token(email, password, password_hash, refresh=False):
              "refresh_token": refresh_token
              }
 
-    return token, 201
+    return token
 
 
 def compare_passwords(password_hash, other_password) -> bool:
@@ -70,7 +71,7 @@ def get_user_by_token(refresh_token):
 
 def update_token(refresh_token):
     data = jwt.decode(refresh_token, key=current_app.config['SECRET_KEY'],
-                      algorithm=current_app.config['ALGORITHM'])
+                      algorithms=current_app.config['ALGORITHM'])
 
     email = data.get("email")
     password = data.get("password")
@@ -79,5 +80,5 @@ def update_token(refresh_token):
 
 
 def open_token():
-    token = request.headers.environ.get('HTTP_AUTHORIZATION').replace('Bearer ', '')
+    token = request.headers['Authorization'].split("Bearer ")[-1]
     return token

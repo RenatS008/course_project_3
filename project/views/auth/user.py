@@ -10,27 +10,30 @@ api = Namespace('user')
 
 @api.route('/')
 class UserView(Resource):
-    @api.marshal_with(user, as_list=True, code=200, description='OK')
+    @api.marshal_with(user, code=200, description='OK')
     def get(self):
         """
         Get user by email
         """
-        return user_service.get_user_by_token(open_token)
+        token = open_token()
+        return user_service.get_user_by_token(token)
 
-    @api.marshal_with(user, as_list=True, code=200, description='OK')
+    @api.marshal_with(user, code=200, description='OK')
     def patch(self):
         """
         Patch data users .
         """
-        return user_service.update_data_user(data=request.json, token=open_token)
+        token = open_token()
+        return user_service.update_data_user(data=request.json, token=token)
 
 
 @api.route('/password/')
 class PasswordView(Resource):
-    @api.marshal_with(user, as_list=True, code=200, description='OK')
+    @api.marshal_with(user, code=200, description='OK')
     def put(self):
         """
         Upd pass user.
         """
-        return user_service.update_password_user(data=request.json, token=open_token)
+        token = open_token()
+        return user_service.update_password_user(data=request.json, token=token)
 
